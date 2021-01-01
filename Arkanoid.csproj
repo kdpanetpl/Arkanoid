@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="ModelWidoku\GraModelWidoku.cs" />
     <Compile Include="Model\Ball.cs" />
+    <Compile Include="Model\GameField.cs" />
     <Compile Include="Model\GameObject.cs" />
     <Compile Include="Widok\GraWindow.xaml.cs">
       <DependentUpon>GraWindow.xaml</DependentUpon>
