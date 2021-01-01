@@ -38,7 +38,7 @@ namespace Arkanoid.Model
             xLocation += speed * Math.Cos(angle / 180 * Math.PI);
             yLocation += speed * Math.Sin(angle / 180 * Math.PI);
 
-            if (xLocation > GameField.gameFieldWidth || xLocation < 0)
+            if (xLocation + size > GameField.gameFieldWidth || xLocation - size < 0)
             {
                 if (angle > 0)
                 {
@@ -55,23 +55,29 @@ namespace Arkanoid.Model
 
             }
 
-            if (xLocation > GameField.gameFieldWidth)
-                xLocation = GameField.gameFieldWidth;
-            if (xLocation < 0)
-                xLocation = 0;
+            if (xLocation + size > GameField.gameFieldWidth)
+                xLocation = GameField.gameFieldWidth - size;
+            if (xLocation - size < 0)
+                xLocation = size;
 
-            if (yLocation > GameField.gameFieldHeight || yLocation < 0)
+            if (yLocation + 2 * size > GameField.gameFieldHeight || yLocation < 0)
             {
                 angle = -angle;
             }
 
 
-            if (yLocation > GameField.gameFieldHeight)
-                yLocation = GameField.gameFieldHeight;
+            if (yLocation + 2 * size > GameField.gameFieldHeight)
+                yLocation = GameField.gameFieldHeight - 2 * size;
             if (yLocation < 0)
                 yLocation = 0;
 
             OnPropertyChanged("xLocation", "yLocation");
+        }
+
+        public void PaletteBounce(Palette palette)
+        {
+            if (xLocation + size > palette.xLocation && xLocation - size < palette.xLocation + palette.width && yLocation < palette.yLocation + palette.height)
+                angle = -angle;
         }
 
         #endregion

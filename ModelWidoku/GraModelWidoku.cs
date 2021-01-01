@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -16,12 +17,17 @@ namespace Arkanoid.ModelWidoku
     class GraModelWidoku : INotifyPropertyChanged
     {
         #region properties
-        public ObservableCollection<GameObject> GameObjects { get; set; }
-        private DispatcherTimer Czas { get; set; }
-        private DispatcherTimer Stoper { get; set; }
+        public ObservableCollection<Ball> Balls { get; set; }
+        public ObservableCollection<Palette> Palette { get; set; }
+        private DispatcherTimer time { get; set; }
+        private DispatcherTimer timer { get; set; }
+        public double gameFieldWidth { get; set; }
+        public double gameFieldHeight { get; set; }
+
+        public ICommand KeyUpCommandCommand { get; set; }
 
         //todo do wywalenie
-        private double Predkosc = 0.01;
+        private double GameRefreshingSpeed = 0.01;
 
         Random random = new Random();
 
@@ -31,49 +37,82 @@ namespace Arkanoid.ModelWidoku
 
         public GraModelWidoku()
         {
-            GameField.gameFieldHeight = 100;
-            GameField.gameFieldWidth = 200;
-            GameObjects = new ObservableCollection<GameObject>();
-            GameObjects.Add(new Ball { xLocation = 50, yLocation = 50, speed = 3, angle = 30 });
+            gameFieldHeight = GameField.gameFieldHeight = 100;
+            gameFieldWidth = GameField.gameFieldWidth = 300;
 
-            Stoper = new DispatcherTimer(TimeSpan.FromSeconds(Predkosc),
+            Palette = new ObservableCollection<Palette>();
+            Palette.Add(new Palette { xLocation = 200, yLocation = 10, paletteMovingSpeed = 5 });
+            Balls = new ObservableCollection<Ball>();
+            Balls.Add(new Ball { xLocation = 50, yLocation = 50, speed = 3, angle = 30 });
+
+            timer = new DispatcherTimer(TimeSpan.FromSeconds(GameRefreshingSpeed),
                 DispatcherPriority.Render,
-                (sender, args) => Ruch(),
+                (sender, args) => Moves(),
                 Application.Current.Dispatcher);
-            Stoper.Stop();
+            timer.Stop();
 
-            RozpoczecieGry();
+            GameStart();
         }
 
         #endregion
 
         #region methods
 
-        private void Ruch()
+        private void Moves()
         {
-            (GameObjects[0] as Ball).Move();
+            (Balls[0] as Ball).Move();
+            Palette[0].Move();
+            Balls[0].PaletteBounce(Palette[0]);
             OnPropertyChanged("GameObjects");
         }
 
-        private void RozpoczecieGry()
+        private void GameStart()
         {
-            Stoper.Interval = TimeSpan.FromSeconds(Predkosc);
-            Stoper.Start();
+            timer.Interval = TimeSpan.FromSeconds(GameRefreshingSpeed);
+            timer.Start();
 
-            Czas = new DispatcherTimer(TimeSpan.FromSeconds(0.05),
+            time = new DispatcherTimer(TimeSpan.FromSeconds(0.05),
                 DispatcherPriority.Render,
-                (sender, args) => CzasKlik(),
+                (sender, args) => TimeClick(),
                 Application.Current.Dispatcher);
         }
 
-        private void CzasKlik()
+        private void TimeClick()
         {
             OnPropertyChanged("CzasGry");
         }
 
+        private void ShootBall()
+        {
+
+        }
+
+        #endregion
+
+        #region commands
+
         #endregion
 
         #region events
+
+        internal void KeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Left)
+            {
+                Palette[0].movingDirection = Directions.Left;
+            }
+            else if(e.Key == Key.Right)
+            {
+                Palette[0].movingDirection = Directions.Right;
+            }
+        }
+
+        internal void KeyUp(KeyEventArgs e)
+        {
+            if (e.Key == Key.Left || e.Key == Key.Right)
+                Palette[0].movingDirection = Directions.Stopped;
+
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(params string[] nazwyWlasnosci)

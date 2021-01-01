@@ -23,5 +23,15 @@ namespace Arkanoid.Widok
         {
             InitializeComponent();
         }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            (this.DataContext as ModelWidoku.GraModelWidoku).KeyUp(e);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            (this.DataContext as ModelWidoku.GraModelWidoku).KeyDown(e);
+        }
     }
 }

@@ -7,12 +7,13 @@
         xmlns:mw="clr-namespace:Arkanoid.ModelWidoku"
         xmlns:m="clr-namespace:Arkanoid.Model"
         mc:Ignorable="d"
-        Title="GraWindow" Height="450" Width="800">
+        Title="GraWindow" Height="450" Width="800" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown">
     <Window.DataContext>
         <mw:GraModelWidoku/>
     </Window.DataContext>
-    
+
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="4*"/>
@@ -24,8 +25,32 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ItemsControl Grid.Column="1" Grid.Row="1" Background="LightGray" ItemsSource="{Binding Path=GameObjects}"
-                      Width="{Binding gameFieldWidth}" Height="{Binding gameFieldHeight}">
+        <ItemsControl Grid.Column="1" Grid.Row="1" Background="LightGray" BorderBrush="Red" ItemsSource="{Binding Path=Balls}"
+                      Width="{Binding gameFieldWidth}" Height="{Binding gameFieldHeight}" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+            <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type m:GameObject}">
+                    <Path Data="{Binding geometry}" Fill="{Binding fill}"/>
+                </DataTemplate>
+            </ItemsControl.Resources>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Path=xLocation}"/>
+                    <Setter Property="Canvas.Bottom" Value="{Binding Path=yLocation}"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+
+        </ItemsControl>
+
+        <ItemsControl Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Palette}"
+                      Width="{Binding gameFieldWidth}" Height="{Binding gameFieldHeight}" VerticalAlignment="Center" HorizontalAlignment="Center">
 
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type m:GameObject}">
