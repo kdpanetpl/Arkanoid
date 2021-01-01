@@ -59,6 +59,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ModelWidoku\GraModelWidoku.cs" />
+    <Compile Include="Model\Ball.cs" />
+    <Compile Include="Model\GameObject.cs" />
     <Compile Include="Widok\GraWindow.xaml.cs">
       <DependentUpon>GraWindow.xaml</DependentUpon>
     </Compile>
@@ -95,8 +97,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,38 +1,38 @@
-﻿using Arkanoid.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
-namespace Arkanoid.ModelWidoku
+namespace Arkanoid.Model
 {
-    class GraModelWidoku : INotifyPropertyChanged
+    class Ball : GameObject, INotifyPropertyChanged
     {
         #region properties
-        public ObservableCollection<GameObject> GameObjects { get; set; }
-        public int gameFieldWidth { get; set; }
-        public int gameFieldHeight { get; set; }
 
-        Random random = new Random();
+        public double size { get; private set; }
+        public double speed { get; set; }
+        public double vector { get; set; }
 
         #endregion
 
         #region ctor
 
-        public GraModelWidoku()
+        public Ball()
         {
-            gameFieldHeight = 300;
-            gameFieldWidth = 500;
-            GameObjects = new ObservableCollection<GameObject>();
-            GameObjects.Add(new Ball { xLocation = 50, yLocation = 50, speed = 1, vector = 0 });
+            size = 5;
+            fill = new RadialGradientBrush(Colors.Black, Colors.LightGray);
+            geometry = new EllipseGeometry(new Point(xLocation, yLocation), size, size);
         }
 
         #endregion
 
+        #region methods
+
+        #endregion
 
         #region events
 
